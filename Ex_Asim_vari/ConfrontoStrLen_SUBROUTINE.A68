@@ -1,0 +1,53 @@
+*Area istruzioni
+		ORG		$8000
+MAIN		SUB.L		#2,SP
+		MOVE.L	#STR1,-(SP)
+		JMP		STRLEN
+		ADD.L		#4,SP
+		MOVE		(SP)+,D2
+		SUB.L		#2,SP
+		MOVE.L	#STR2,-(SP)
+		JMP		STRLEN
+		ADD.L		#4,SP
+		MOVE		(SP)+,D3
+		CLR		D4
+		CMP		D3,D2
+		BNE		DIV
+UGU		MOVE		#0,D4
+		BRA		EXIT
+DIV		CMP		D3,D2
+		BGT		MAG
+MIN		MOVE		#1,D4
+		BRA		EXIT
+MAG		MOVE		#2,D4
+EXIT		MOVE		D4,RES
+		STOP		#$2700
+
+*Area dati
+		ORG		$8800
+STR1		DC.B		'Prima',0
+STR2		DC.B		'Seconda',0
+RES		DS.W		1
+
+*Subroutine STRLEN
+
+		ORG		$8400
+OFF_S		EQU		8
+OFF_R		EQU		12
+STRLEN	LINK		A6,#0
+		MOVEM.L	A0/D0/D1,-(SP)
+		MOVE.L	OFF_S(A6),A0
+		CLR		D0
+LOOP		MOVE.B	(A0),D1
+		BEQ		END_S
+		ADD		#1,D0
+		ADD		#1,A0
+		BRA		LOOP
+END_S		MOVE		D0,OFF_R(A6)
+		MOVEM.L	(SP)+,A0/D0/D1
+		UNLK		A6
+		RTS
+		
+		END		MAIN
+
+

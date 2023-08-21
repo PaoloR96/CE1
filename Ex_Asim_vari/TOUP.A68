@@ -1,0 +1,35 @@
+		ORG		$8000
+
+MAIN		MOVE.L	#STR1,-(SP)
+		JSR		TOUP
+		ADD.L		#4,SP
+		STOP		#$2700
+
+
+		ORG		$8800
+
+STR1		DC.B		'Scemo chi legge',0
+
+
+		ORG		$8400
+
+OFF_S		EQU		8
+
+TOUP		LINK		A6,#0
+		MOVEM.L	A0/D0,-(SP)
+		MOVE.L	OFF_S(A6),A0
+		CLR		D0
+LOOP		MOVE.B	(A0)+,D0
+		TST.B		D0
+		BEQ		EXIT
+		CMP.B		#'a',D0
+		BLT		LOOP
+		CMP.B		#'z',D0
+		BGT		LOOP
+		SUB.B		#$20,D0
+		MOVE.B	D0,-(A0)
+		BRA		LOOP
+EXIT		MOVEM.L	(SP)+,A0/D0
+		UNLK		A6
+		RTS
+		END		MAIN

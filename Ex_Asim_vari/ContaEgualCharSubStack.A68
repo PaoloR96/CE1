@@ -1,0 +1,46 @@
+*NUMERO DI CARATTERI SU DUE STRINGHE DI EGUAL LUNGHEZZA UGUALI SU POSIZIONI UGUALI
+*
+*************************************************************************************************************
+*
+		ORG		$8000
+MAIN		SUB.L		#2,SP
+		MOVE.L	#STR1,-(SP)
+		MOVE.L	#STR2,-(SP)
+		JSR		CONTAUG
+		ADD.L		#8,SP
+		MOVE.W	(SP)+,CAR_UG
+		STOP		#$2700
+
+		ORG		$8800
+STR1		DC.B		'Oggi, 29 Maggio\0'
+STR2		DC.B		'Ieri, 03 Giugno\0'
+CAR_UG	DC.W		0
+
+		ORG		$8400
+OFFS1		EQU		8
+OFFS2		EQU		12
+OFFR		EQU		16
+CONTAUG	LINK		A6,#0
+		MOVEM.L	A0/A1/D0,-(SP)
+		CLR.W		D0
+		MOVE.L	OFFS1(A6),A0
+		MOVE.L	OFFS2(A6),A1
+LOOP		CMP.B		#'\',(A0)
+		BEQ		PREXITSR
+		CMPM.B	(A0)+,(A1)+
+		BNE		LOOP
+		ADD.W		#1,D0
+		BRA		LOOP
+PREXITSR	ADDA.L	#1,A0
+		ADDA.L	#1,A1
+		CMP.B		#'0',(A0)
+		BNE		LOOP
+EXITSR	MOVEM.L	(SP)+,A0/A1/D0
+		UNLK		A6
+		RTS
+		
+		END		MAIN
+*
+*************************************************************************************************************
+
+

@@ -1,0 +1,13 @@
+		ORG		$8000
+SUM		CLR.W		D0
+		ADD		X,D0
+		ADD		Y,D0
+		ADD		Z,D0
+		MOVE		D0,SOMMA
+		STOP		#$2700
+		ORG		$8200
+SOMMA	DS.W		1
+X		DC.W		23
+Y		DC.W		12
+Z		DC.W		24
+		END		SUM
